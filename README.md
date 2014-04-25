@@ -9,6 +9,8 @@ put them into an array inside a js file, that way you only load one file per seq
 
 Obviously this technique is required for a large sequence of images, when putting them in a sprite is not practical.
 
+Checkout the demo [here](http://www.martiplanellas.info/sequencer/)
+
 ## Usage
 
 Create new sequencer like this
