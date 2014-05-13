@@ -29,7 +29,9 @@ function Sequencer(options) {
 
     this.play = function(name, loop) {
         var that = this;
-
+        
+        if (typeof this.data[name] === 'undefined')
+            return false;
         this.loop            = loop;
         this.total           = this.data[name].length;
         this.current         = 0;
@@ -41,6 +43,12 @@ function Sequencer(options) {
         this.af = window.raf(function(){
             that.draw();
         });
+    };
+    
+    this.stop = function(){
+        window.caf(this.af);
+        this.playing = false;
+        this.data = [];
     };
 
     this.draw = function() {
