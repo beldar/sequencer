@@ -5,6 +5,10 @@
 		this.options = options || {};
         this.fps     = this.options.fps || 50;
         this.canvas  = this.options.canvas || document.getElementById('canvas');
+        this.x       = this.options.x || 0;
+        this.y       = this.options.y || 0;
+        this.width   = this.options.width || false;
+        this.height  = this.options.height || false;
         this.data    = {};
         this.ctx     = this.canvas.getContext('2d');
         this.playing = false;
@@ -110,7 +114,11 @@
         this.image.src = this.data[this.currentSequence][this.current];
         this.image.onload = function() {
             that.ctx.clearRect(0, 0, that.canvas.width, that.canvas.height);
-            that.ctx.drawImage(that.image, 0, 0);
+            if (that.width && that.height) {
+                that.ctx.drawImage(that.image, that.x, that.y, that.width, that.height);
+            } else {
+                that.ctx.drawImage(that.image, that.x, that.y);
+            }
             that.current++;
         };
 

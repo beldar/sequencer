@@ -331,16 +331,16 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         dot: true,
-                        cwd: '<%= config.dist %>',
+                        cwd: '<%= config.dist %>/scripts',
                         dest: '.',
-                        src: ['scripts/sequencer.min.js']
+                        src: ['sequencer.min.js']
                     },
                     {
                         expand: true,
                         dot: true,
-                        cwd: '<%= config.app %>',
+                        cwd: '<%= config.app %>/scripts',
                         dest: '.',
-                        src: ['scripts/sequencer.js']
+                        src: ['sequencer.js']
                     }
                 ]
             }
