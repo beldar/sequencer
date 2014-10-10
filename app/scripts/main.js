@@ -20,8 +20,8 @@ window.onload = function(){
             s.play('positive', false);
         }
         if (e.detail.sequence === 'positive') {
-            console.log('Positive stopped, playing breathing, loop: false');
-            s.play('breathing', true);
+            console.log('Positive stopped, playing breathing in reverse, loop: false');
+            s.reverse('breathing', true);
         }
     });
 };

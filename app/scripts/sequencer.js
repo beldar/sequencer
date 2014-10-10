@@ -18,6 +18,8 @@
         this.image   = new Image();
         window.raf   = window.requestAnimationFrame;
         window.caf   = window.cancelAnimationFrame;
+        
+        return this;
 	};
 	Sequencer.prototype.constructor = Sequencer;
     
@@ -32,6 +34,8 @@
             var event = new CustomEvent('loaded', {'detail' : {'sequence' : name}});
             that.canvas.dispatchEvent(event);
         });
+        
+        return this;
     };
 
     Sequencer.prototype.play = function(name, loop) {
@@ -52,6 +56,18 @@
         this.af = window.raf(function(){
             that.draw();
         });
+        
+        return this;
+    };
+    
+    Sequencer.prototype.reverse = function(name, loop) {
+        if (typeof this.data[name] === 'undefined') {
+            return false;
+        }
+        
+        this.data[name].reverse();
+        
+        return this.play(name, loop);
     };
     
     Sequencer.prototype.get = function (url, callback) {
@@ -74,6 +90,8 @@
         window.caf(this.af);
         this.playing = false;
         this.data = [];
+        
+        return this;
     };
 
     Sequencer.prototype.draw = function() {
