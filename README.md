@@ -15,7 +15,28 @@ It doesn't have any other library dependecies.
 
 Checkout the demo [here](http://www.martiplanellas.info/sequencer/)
 
+## Install
+
+### Using bower
+
+    bower install sequencerjs --save
+    
+### Using script
+
+    <script type="text/javascript" src="sequencer/sequencer.min.js"></script>
+
 ## Usage
+
+### Using compiler.php
+
+This little php script found in the root of this project, is a helper that will take a folder of png images, and output a js file containing an array with all the base64 encode of those images.
+
+The usage is as follows:
+
+    php compiler.php "/path/to/pngs" "file_name.js"
+
+
+### Using the library
 
 Create new sequencer like this
 
