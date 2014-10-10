@@ -119,6 +119,7 @@
             this.loops ++;
             stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops}});
             this.canvas.dispatchEvent(stopEv);
+            return false;
         }
 
         if (this.current === this.total && !this.loop){
@@ -127,9 +128,10 @@
             this.current = 0;
             stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops}});
             this.canvas.dispatchEvent(stopEv);
+            return false;
         }
 
-        this.image.src = this.data[this.currentSequence][this.current];
+        
         this.image.onload = function() {
             that.ctx.clearRect(0, 0, that.canvas.width, that.canvas.height);
             if (that.width && that.height) {
@@ -137,9 +139,17 @@
             } else {
                 that.ctx.drawImage(that.image, that.x, that.y);
             }
-            that.current++;
         };
-
+        this.image.onerror = function(e) {
+            console.error('Image failed to load', e);
+        }
+        
+        this.image.src = this.data[this.currentSequence][this.current];
+        if (this.image.complete) {
+            this.image.onload();
+        }
+        
+        this.current++;
     };
 
     //CustomEvent polyfill
