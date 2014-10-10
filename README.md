@@ -1,5 +1,7 @@
 # Image Sequencer
 
+Image sequence player, by transforming images encoded in base64 into js files and plotting them into a canvas element.
+
 ## Summary
 
 The code can be found in `sequencer.js` or `sequencer.min.js`.
@@ -8,6 +10,8 @@ The idea is to use something like the `/compiler.php` to encode a sequence of im
 put them into an array inside a js file, that way you only load one file per sequence instead of all the images one by one.
 
 Obviously this technique is required for a large sequence of images, when putting them in a sprite is not practical.
+
+It doesn't have any other library dependecies.
 
 Checkout the demo [here](http://www.martiplanellas.info/sequencer/)
 
@@ -69,9 +73,14 @@ Here's a more complete example (that you can find in `/app/scripts/main.js`):
         }
     });
 
+## Browser support
+
+It uses canvas to render the images, so all modern browser work.
+
+Since IE8 doesn't support canvas, IE support is >IE9.
+
 
 ## Installation of the Demo
-
 
 Dependencies
 ------------

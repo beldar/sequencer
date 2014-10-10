@@ -1,4 +1,4 @@
-$(function(){
+window.onload = function(){
     var s = new Sequencer();
     s.loadSequence('breathing', 'scripts/breath_sequence.js');
     s.canvas.addEventListener('loaded', function(e){
@@ -24,4 +24,4 @@ $(function(){
             s.play('breathing', true);
         }
     });
-});
+};

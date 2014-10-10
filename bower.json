@@ -1,10 +1,13 @@
 {
-  "name": "sequencer",
-  "private": true,
-  "dependencies": {
-    "bootstrap-sass-official": "~3.1.0",
-    "modernizr": "~2.6.2",
-    "jquery": "~1.11.0"
-  },
-  "devDependencies": {}
+  "name": "sequencerjs",
+  "version": "1.0.0",
+  "description": "Image sequence player, by transforming images encoded in base64 into js files and plotting them into a canvas element",
+  "main": "sequencer.min.js",
+  "ignore": [
+    "test/*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap-sass-official": "~3.1.0"
+  }
 }
