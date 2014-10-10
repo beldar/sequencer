@@ -1,6 +1,6 @@
 {
   "name": "sequencerjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Image sequence player, by transforming images encoded in base64 into js files and plotting them into a canvas element",
   "main": "sequencer.min.js",
   "ignore": [

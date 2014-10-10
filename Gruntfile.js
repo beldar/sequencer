@@ -325,6 +325,24 @@ module.exports = function (grunt) {
                 cwd: '<%= config.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            root:{ 
+                files:[
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.dist %>',
+                        dest: '.',
+                        src: ['scripts/sequencer.min.js']
+                    },
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= config.app %>',
+                        dest: '.',
+                        src: ['scripts/sequencer.js']
+                    }
+                ]
             }
         },
 
@@ -406,7 +424,8 @@ module.exports = function (grunt) {
         'modernizr',
         //'rev',
         'usemin',
-        'htmlmin'
+        'htmlmin',
+        'copy:root'
     ]);
 
     grunt.registerTask('default', [
