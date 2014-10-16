@@ -8,12 +8,16 @@ $dir = $argv[1];
 $outputname = $argv[2];
 chdir($dir);
 $files = scandir($dir);
+natsort($files);
 $output = '[';
 $n = 0;
 foreach ($files as $file) {
     if ($file != '.' && $file!='..') {
-        $output .= "'".base64_encode_image($file, 'png')."',";
-        $n++;
+        if (isPNG($file)) {
+            echo "Converting file ".$file.PHP_EOL;
+            $output .= "'".base64_encode_image($file, 'png')."',";
+            $n++;
+        }
     }
 }
 $output = substr($output, 0, -1);
@@ -22,6 +26,10 @@ chdir($origdir);
 file_put_contents($outputname, $output);
 echo "File created correctly $outputname containing $n images".PHP_EOL;
 
+function isPNG($file) {
+    $imageinfo = @getimagesize($file);
+    return $imageinfo['mime'] =='image/png';
+}
 function base64_encode_image ($filename=string,$filetype=string) {
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
