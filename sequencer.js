@@ -93,6 +93,10 @@
         
         return this;
     };
+    
+    Sequencer.prototype.clean = function() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    };
 
     Sequencer.prototype.draw = function() {
         if (! this.playing ) {
@@ -126,6 +130,7 @@
             window.caf(this.af);
             this.playing = false;
             this.current = 0;
+            this.clean();
             stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops}});
             this.canvas.dispatchEvent(stopEv);
             return false;
@@ -133,7 +138,7 @@
 
         
         this.image.onload = function() {
-            that.ctx.clearRect(0, 0, that.canvas.width, that.canvas.height);
+            that.clean();
             if (that.width && that.height) {
                 that.ctx.drawImage(that.image, that.x, that.y, that.width, that.height);
             } else {
@@ -142,7 +147,7 @@
         };
         this.image.onerror = function(e) {
             console.error('Image failed to load', e);
-        }
+        };
         
         this.image.src = this.data[this.currentSequence][this.current];
         if (this.image.complete) {
