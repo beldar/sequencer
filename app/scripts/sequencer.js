@@ -2,7 +2,7 @@
     'use strict';
     
     var Sequencer = function (options) {
-		this.options = options || {};
+        this.options = options || {};
         this.fps     = this.options.fps || 50;
         this.canvas  = this.options.canvas || document.getElementById('canvas');
         this.x       = this.options.x || 0;
@@ -16,12 +16,13 @@
         this.total   = 0;
         this.loops   = 1;
         this.image   = new Image();
+        this.reversed= false;
         window.raf   = window.requestAnimationFrame;
         window.caf   = window.cancelAnimationFrame;
         
         return this;
-	};
-	Sequencer.prototype.constructor = Sequencer;
+    };
+    Sequencer.prototype.constructor = Sequencer;
     
     Sequencer.prototype.loadSequence = function(name, sequence) {
         var that = this;
@@ -66,9 +67,19 @@
         }
         
         this.data[name].reverse();
+        this.reversed = true;
         
         return this.play(name, loop);
     };
+
+    Sequencer.prototype.dereverse = function() {
+        if (this.reversed) {
+            this.data[this.currentSequence].reverse();
+            this.reversed = false;
+        }
+
+        return this;
+    }
     
     Sequencer.prototype.get = function (url, callback) {
         try {
@@ -113,6 +124,7 @@
         });
 
         if (dt < this.fps) {
+            console.log('pass');
             return false;
         }
 
@@ -130,8 +142,9 @@
             window.caf(this.af);
             this.playing = false;
             this.current = 0;
-            this.clean();
-            stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops}});
+            //this.clean();
+            console.log('Stop, reversed?', this.reversed);
+            stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops, 'reversed': this.reversed}});
             this.canvas.dispatchEvent(stopEv);
             return false;
         }
