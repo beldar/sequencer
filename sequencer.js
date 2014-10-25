@@ -124,7 +124,6 @@
         });
 
         if (dt < this.fps) {
-            console.log('pass');
             return false;
         }
 
@@ -142,8 +141,6 @@
             window.caf(this.af);
             this.playing = false;
             this.current = 0;
-            //this.clean();
-            console.log('Stop, reversed?', this.reversed);
             stopEv  = new CustomEvent('stopped', {'detail' : {'sequence' : this.currentSequence, 'loops' : this.loops, 'reversed': this.reversed}});
             this.canvas.dispatchEvent(stopEv);
             return false;
