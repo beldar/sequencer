@@ -19,24 +19,53 @@
         this.reversed= false;
         window.raf   = window.requestAnimationFrame;
         window.caf   = window.cancelAnimationFrame;
-        
+          
         return this;
     };
     Sequencer.prototype.constructor = Sequencer;
     
-    Sequencer.prototype.loadSequence = function(name, sequence) {
+    Sequencer.prototype.loadSequence = function(name, sequence, preloadimgs) {
         var that = this;
         
         sequence = sequence || this.sequence;
         name     = name || 'default';
+        preloadimgs = preloadimgs || false;
             
         this.get(sequence, function(data){
             that.data[name] = eval( data );
             var event = new CustomEvent('loaded', {'detail' : {'sequence' : name}});
             that.canvas.dispatchEvent(event);
+            if (preloadimgs) {
+                that.preload(name);
+            }
         });
         
         return this;
+    };
+    
+    Sequencer.prototype.preload = function(name) {
+        var nimg = this.data[name].length,
+            preloaded = 0,
+            that = this;
+        
+        for (var i in this.data[name]) {
+            var img = new Image(),
+                imgdata = this.data[name][i];
+            
+            img.onload = function() {
+                preloaded++;
+                var event = new CustomEvent('progress', {'detail' : {'sequence' : name, 'progress': (preloaded/nimg)*100}});
+                that.canvas.dispatchEvent(event);
+                if (preloaded === nimg) {
+                    var event = new CustomEvent('preloaded', {'detail' : {'sequence' : name}});
+                    that.canvas.dispatchEvent(event);
+                }
+            };
+            img.src = imgdata;
+            if (img.complete) {
+                img.onload();
+            }
+        }
     };
 
     Sequencer.prototype.play = function(name, loop) {
@@ -61,6 +90,32 @@
         return this;
     };
     
+    Sequencer.prototype.seek = function(name, frame) {
+        var that = this;
+        
+        if (typeof this.data[name] === 'undefined') {
+            return false;
+        }
+        
+        if (typeof this.data[name][frame] === 'undefined') {
+            return false;
+        }
+        
+        this.loop            = false;
+        this.total           = this.data[name].length;
+        this.current         = frame;
+        this.loops           = 0;
+        this.currentSequence = name || 'default';
+        this.playing         = true;
+        this.time            = new Date().getTime();
+
+        this.af = window.raf(function(){
+            that.draw(true);
+        });
+        
+        return this;
+    };
+    
     Sequencer.prototype.reverse = function(name, loop) {
         if (typeof this.data[name] === 'undefined') {
             return false;
@@ -79,9 +134,10 @@
         }
 
         return this;
-    }
+    };
     
     Sequencer.prototype.get = function (url, callback) {
+        var that = this;
         try {
             var x = new (window.XMLHttpRequest || window.ActiveXObject)('MSXML2.XMLHTTP.3.0');
             x.open('GET', url, true);
@@ -89,6 +145,10 @@
             x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             x.onreadystatechange = function () {
                 return x.readyState > 3 && callback && callback(x.responseText, x);
+            };
+            x.onprogress = function(e) {
+                var progressEv  = new CustomEvent('xhrprogress', {'detail' : {'sequence' : this.currentSequence, 'progress': e}});
+                that.canvas.dispatchEvent(progressEv);
             };
             x.send(null);
         } catch (e) {
@@ -109,7 +169,7 @@
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 
-    Sequencer.prototype.draw = function() {
+    Sequencer.prototype.draw = function(seek) {
         if (! this.playing ) {
             return false;
         }
@@ -117,14 +177,17 @@
         var now     = new Date().getTime(),
             dt      = now - this.time,
             that    = this,
+            seek    = seek || false,
             stopEv;
-
-        this.af = window.raf(function(){
-            that.draw();
-        });
-
-        if (dt < this.fps) {
-            return false;
+        
+        if (!seek) {
+            this.af = window.raf(function(){
+                that.draw();
+            });
+            
+            if (dt < this.fps) {
+                return false;
+            }
         }
 
         this.time = now;
