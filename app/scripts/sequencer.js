@@ -227,7 +227,9 @@
             this.image.onload();
         }
         
-        this.current++;
+        if (!seek) {
+            this.current++;
+        }
     };
 
     //CustomEvent polyfill
