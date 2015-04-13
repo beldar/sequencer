@@ -189,7 +189,7 @@
             if (dt < this.fps) {
                 return false;
             } else {
-                this.time = now - (dt & this.fps);
+                this.time = now - (dt % this.fps);
             }
         }
 
