@@ -4,6 +4,7 @@
     var Sequencer = function (options) {
         this.options = options || {};
         this.fps     = this.options.fps || 50;
+        this.fps     = 1000 / this.fps;
         this.canvas  = this.options.canvas || document.getElementById('canvas');
         this.x       = this.options.x || 0;
         this.y       = this.options.y || 0;
@@ -187,10 +188,12 @@
             
             if (dt < this.fps) {
                 return false;
+            } else {
+                this.time = now - (dt & this.fps);
             }
         }
 
-        this.time = now;
+        
 
         if (this.current === this.total && this.loop) {
             this.current = 0;
